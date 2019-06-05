@@ -196,21 +196,16 @@
   }
 
   var getWizardX = function (width) {
-    // надо ли округлять?
-    // можно ли брать значения из переменных снаружи функции?
     return (width - wizardWidth) / 2;
   }
 
   var getWizardY = function (height) {
-    // в задании не до конца ясно написано, откуда считать 2/3
-    // я трактовал как "ноги мага находятся на высоте 2/3 от низа игрового пространства"
-    // то есть, с учетом того, что координатная сетка начинается в левом верхнем углу,
-    // из трети высоты игрового пространства надо вычесть высоту мага
     return (height / 3 - getWizardHeight(wizardWidth));
   }
 
 </script>
 
+<script src="js/stat.js"></script>
 <script src="js/game.js"></script>
 
 </body>
