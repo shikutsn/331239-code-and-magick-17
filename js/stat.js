@@ -33,7 +33,7 @@ var getMaxElement = function (arr) {
 
 var getBarColor = function (playerName) {
   return (playerName === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + Math.floor(100 * Math.random()) + '%, 50%)';
-}
+};
 
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
