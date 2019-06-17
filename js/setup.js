@@ -48,7 +48,7 @@ var getRandomNumber = function (min, max) {
 
 var getRandomArrayElement = function (arr) {
   return arr[getRandomNumber(0, arr.length)];
-}
+};
 
 var getRandomWizardName = function () {
   if (Math.random() < 0.5) {
@@ -106,7 +106,7 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .querySelector('.setup-similar-item');
 
 var wizards = getWizards(WIZARDS_QUANTITY);
-var fragment = fillFragment(wizards, similarWizardTemplate)
+var fragment = fillFragment(wizards, similarWizardTemplate);
 
 
 similarListElement.appendChild(fragment);
