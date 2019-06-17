@@ -46,19 +46,23 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
+var getRandomArrayElement = function (arr) {
+  return arr[getRandomNumber(0, arr.length)];
+}
+
 var getRandomWizardName = function () {
-  if (getRandomNumber(0, 100) < 50) {
-    return (WIZARD_NAMES[getRandomNumber(0, WIZARD_NAMES.length)] + ' ' + WIZARD_SURNAMES[getRandomNumber(0, WIZARD_SURNAMES.length)]);
+  if (Math.random() < 0.5) {
+    return getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES);
   } else {
-    return (WIZARD_SURNAMES[getRandomNumber(0, WIZARD_SURNAMES.length)] + ' ' + WIZARD_NAMES[getRandomNumber(0, WIZARD_NAMES.length)]);
+    return getRandomArrayElement(WIZARD_SURNAMES) + ' ' + getRandomArrayElement(WIZARD_NAMES);
   }
 };
 
 var getRandomWizard = function () {
   return {
     name: getRandomWizardName(),
-    coatColor: WIZARD_COAT_COLORS[getRandomNumber(0, WIZARD_COAT_COLORS.length)],
-    eyesColor: WIZARD_EYES_COLORS[getRandomNumber(0, WIZARD_EYES_COLORS.length)]
+    coatColor: getRandomArrayElement(WIZARD_COAT_COLORS),
+    eyesColor: getRandomArrayElement(WIZARD_EYES_COLORS)
   };
 };
 
@@ -82,10 +86,14 @@ var renderWizard = function (wizard, template) {
   return wizardElement;
 };
 
-var fillFragment = function (container, wizardsList, template) {
+var fillFragment = function (wizardsList, template) {
+  var fragment = document.createDocumentFragment();
+
   for (var i = 0; i < wizardsList.length; i++) {
-    container.appendChild(renderWizard(wizards[i], template));
+    fragment.appendChild(renderWizard(wizards[i], template));
   }
+
+  return fragment;
 };
 
 
@@ -98,8 +106,8 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .querySelector('.setup-similar-item');
 
 var wizards = getWizards(WIZARDS_QUANTITY);
-var fragment = document.createDocumentFragment();
+var fragment = fillFragment(wizards, similarWizardTemplate)
 
-fillFragment(fragment, wizards, similarWizardTemplate);
+
 similarListElement.appendChild(fragment);
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
