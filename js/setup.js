@@ -108,9 +108,9 @@ var fillFragment = function (wizardsList, template) {
 };
 
 
-var userDialog = document.querySelector('.setup');
+var setup = document.querySelector('.setup');
 
-var similarListElement = userDialog.querySelector('.setup-similar-list');
+var similarListElement = setup.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
@@ -120,10 +120,9 @@ var fragment = fillFragment(wizards, similarWizardTemplate);
 
 
 similarListElement.appendChild(fragment);
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+setup.querySelector('.setup-similar').classList.remove('hidden');
 
 
-var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
 var wizardNameField = setup.querySelector('.setup-user-name');
