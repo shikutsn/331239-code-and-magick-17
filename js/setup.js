@@ -109,7 +109,6 @@ var fillFragment = function (wizardsList, template) {
 
 
 var userDialog = document.querySelector('.setup');
-// userDialog.classList.remove('hidden');
 
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
@@ -122,8 +121,6 @@ var fragment = fillFragment(wizards, similarWizardTemplate);
 
 similarListElement.appendChild(fragment);
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
-
-// -------------------------------------------
 
 
 var setup = document.querySelector('.setup');
@@ -193,32 +190,5 @@ setupClose.addEventListener('click', function () {
 setupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closeSetupWindow();
-  }
-});
-
-
-// русификация сообщений об ошибках в имени волшебника
-wizardNameField.addEventListener('invalid', function () {
-  if (wizardNameField.validity.tooShort) {
-    wizardNameField.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-  } else if (wizardNameField.validity.tooLong) {
-    wizardNameField.setCustomValidity('Имя не должно превышать 25-ти символов');
-  } else if (wizardNameField.validity.valueMissing) {
-    wizardNameField.setCustomValidity('Обязательное поле');
-  }
-});
-
-
-// обновление статуса поля ввода имени
-wizardNameField.addEventListener('input', function (evt) {
-  var target = evt.target;
-  if (target.validity.valueMissing) {
-    target.setCustomValidity('Обязательное поле');
-  } else if (target.value.length < 2) {
-    target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-  } else if (target.value.length > 25) {
-    target.setCustomValidity('Имя не должно превышать 25-ти символов');
-  } else {
-    target.setCustomValidity('');
   }
 });
