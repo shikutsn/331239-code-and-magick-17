@@ -101,7 +101,7 @@ var fillFragment = function (wizardsList, template) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < wizardsList.length; i++) {
-    fragment.appendChild(renderWizard(wizards[i], template));
+    fragment.appendChild(renderWizard(wizardsList[i], template));
   }
 
   return fragment;
