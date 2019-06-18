@@ -44,6 +44,14 @@ var WIZARD_EYES_COLORS = [
   'green'
 ];
 
+var WIZARD_FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
 var getRandomNumber = function (min, max) {
   // случайное целое число из полуинтервала [min, max)
   return Math.floor(Math.random() * (max - min)) + min;
@@ -115,48 +123,102 @@ var fragment = fillFragment(wizards, similarWizardTemplate);
 similarListElement.appendChild(fragment);
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
 
-
+// -------------------------------------------
 
 
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
+var wizardNameField = setup.querySelector('.setup-user-name');
+var wizardCoat = setup.querySelector('.setup-wizard .wizard-coat');
+var wizardEyes = setup.querySelector('.setup-wizard .wizard-eyes');
+var wizardFireball = setup.querySelector('.setup-fireball-wrap');
+var wizardCoatColorField = setup.querySelector('[name="coat-color"]');
+var wizardEyesColorField = setup.querySelector('[name="eyes-color"]');
+var wizardFireballColorField = setup.querySelector('[name="fireball-color"]');
 
-var onPopupEscPress = function(evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closePopup();
+var setWizardCoatColor = function () {
+  wizardCoat.style.fill = getRandomArrayElement(WIZARD_COAT_COLORS);
+  wizardCoatColorField.value = wizardCoat.style.fill;
+};
+
+var setWizardEyesColor = function () {
+  wizardEyes.style.fill = getRandomArrayElement(WIZARD_EYES_COLORS);
+  wizardEyesColorField.value = wizardEyes.style.fill;
+};
+
+var setWizardFireballColor = function () {
+  wizardFireball.style.backgroundColor = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
+  wizardFireballColorField.value = wizardFireball.style.backgroundColor;
+};
+
+var onSetupWindowEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== wizardNameField) {
+    closeSetupWindow();
   }
 };
 
-var openPopup = function() {
+var openSetupWindow = function () {
   setup.classList.remove('hidden');
-  document.addEventListener('keydown', onPopupEscPress);
+  document.addEventListener('keydown', onSetupWindowEscPress);
+
+  wizardCoat.addEventListener('click', setWizardCoatColor);
+  wizardEyes.addEventListener('click', setWizardEyesColor);
+  wizardFireball.addEventListener('click', setWizardFireballColor);
 };
 
-var closePopup = function() {
+var closeSetupWindow = function () {
   setup.classList.add('hidden');
-  document.removeEventListener('keydown', onPopupEscPress);
+  document.removeEventListener('keydown', onSetupWindowEscPress);
+
+  wizardCoat.removeEventListener('click', setWizardCoatColor);
+  wizardEyes.removeEventListener('click', setWizardEyesColor);
+  wizardFireball.removeEventListener('click', setWizardFireballColor);
 };
 
-setupOpen.addEventListener('click', function() {
-  openPopup();
+setupOpen.addEventListener('click', function () {
+  openSetupWindow();
 });
 
-setupOpen.addEventListener('keydown', function(evt) {
+setupOpen.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    openPopup();
+    openSetupWindow();
   }
 });
 
-setupClose.addEventListener('click', function() {
-  closePopup();
+setupClose.addEventListener('click', function () {
+  closeSetupWindow();
 });
 
-setupClose.addEventListener('keydown', function(evt) {
+setupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    closePopup();
+    closeSetupWindow();
   }
 });
 
 
+// русификация сообщений об ошибках в имени волшебника
+wizardNameField.addEventListener('invalid', function () {
+  if (wizardNameField.validity.tooShort) {
+    wizardNameField.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (wizardNameField.validity.tooLong) {
+    wizardNameField.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else if (wizardNameField.validity.valueMissing) {
+    wizardNameField.setCustomValidity('Обязательное поле');
+  }
+});
 
+
+// обновление статуса поля ввода имени
+wizardNameField.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.validity.valueMissing) {
+    target.setCustomValidity('Обязательное поле');
+  } else if (target.value.length < 2) {
+    target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (target.value.length > 25) {
+    target.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
