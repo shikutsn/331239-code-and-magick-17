@@ -62,11 +62,9 @@ var getRandomArrayElement = function (arr) {
 };
 
 var getRandomWizardName = function () {
-  if (Math.random() < 0.5) {
-    return getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES);
-  } else {
-    return getRandomArrayElement(WIZARD_SURNAMES) + ' ' + getRandomArrayElement(WIZARD_NAMES);
-  }
+  var name = getRandomArrayElement(WIZARD_NAMES);
+  var surname = getRandomArrayElement(WIZARD_SURNAMES);
+  return Math.random() < 0.5 ? name + ' ' + surname : surname + ' ' + name;
 };
 
 var getRandomWizard = function () {
@@ -155,6 +153,10 @@ var onSetupWindowEscPress = function (evt) {
   }
 };
 
+var resetSetupWindowPosition = function (element) {
+  element.style = '';
+}
+
 var openSetupWindow = function () {
   setupEl.classList.remove('hidden');
   document.addEventListener('keydown', onSetupWindowEscPress);
@@ -171,6 +173,8 @@ var closeSetupWindow = function () {
   wizardCoatEl.removeEventListener('click', setWizardCoatColor);
   wizardEyesEl.removeEventListener('click', setWizardEyesColor);
   wizardFireballEl.removeEventListener('click', setWizardFireballColor);
+
+  resetSetupWindowPosition(setupEl);
 };
 
 setupOpenEl.addEventListener('click', function () {
@@ -191,4 +195,57 @@ setupCloseEl.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closeSetupWindow();
   }
+});
+
+// Задание 9
+// сразу открываем окно настроек для отладки
+openSetupWindow();
+
+var setupDragHandleEl = setupEl.querySelector('.upload');
+
+setupDragHandleEl.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragging = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragging = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    setupEl.style.top = (setupEl.offsetTop - shift.y) + 'px';
+    setupEl.style.left = (setupEl.offsetLeft - shift.x) + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragging) {
+        var onClickPreventDefault = function (evt) {
+          evt.preventDefault();
+          setupDragHandleEl.removeEventListener('click', onClickPreventDefault)
+        };
+        setupDragHandleEl.addEventListener('click', onClickPreventDefault);
+      }
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
