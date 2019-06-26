@@ -155,7 +155,7 @@ var onSetupWindowEscPress = function (evt) {
 
 var resetSetupWindowPosition = function (element) {
   element.style = '';
-}
+};
 
 var openSetupWindow = function () {
   setupEl.classList.remove('hidden');
@@ -198,8 +198,6 @@ setupCloseEl.addEventListener('keydown', function (evt) {
 });
 
 // Задание 9
-// сразу открываем окно настроек для отладки
-openSetupWindow();
 
 var setupDragHandleEl = setupEl.querySelector('.upload');
 
@@ -238,14 +236,60 @@ setupDragHandleEl.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mouseup', onMouseUp);
 
     if (dragging) {
-        var onClickPreventDefault = function (evt) {
-          evt.preventDefault();
-          setupDragHandleEl.removeEventListener('click', onClickPreventDefault)
-        };
-        setupDragHandleEl.addEventListener('click', onClickPreventDefault);
-      }
+      var onClickPreventDefault = function (draggingEvt) {
+        draggingEvt.preventDefault();
+        setupDragHandleEl.removeEventListener('click', onClickPreventDefault);
+      };
+      setupDragHandleEl.addEventListener('click', onClickPreventDefault);
+    }
   };
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 });
+
+
+(function () {
+  // наполнить магазин звездами
+  var artifactShopCellsEl = document.querySelectorAll('.setup-artifacts-shop .setup-artifacts-cell');
+  var firstShopItemEl = artifactShopCellsEl[0].querySelector('img');
+  artifactShopCellsEl.forEach(function (item, i) {
+    if (i) {
+      item.appendChild(firstShopItemEl.cloneNode(true));
+    }
+  });
+})();
+
+var draggableArtifactEl;
+
+var isArtifactCell = function (element) {
+  return element.classList.contains('setup-artifacts-cell');
+};
+
+var isEmptyElement = function (element) {
+  return !element.children.length;
+};
+
+var onDocumentDragover = function (evt) {
+  evt.preventDefault();
+};
+
+var onDocumentDrop = function (evt) {
+  if (isArtifactCell(evt.target) && isEmptyElement(evt.target)) {
+    evt.target.appendChild(draggableArtifactEl);
+  }
+
+  draggableArtifactEl = null;
+  document.removeEventListener('drop', onDocumentDrop);
+  document.removeEventListener('dragover', onDocumentDragover);
+};
+
+var onDocumentDragStart = function (evt) {
+  if (isArtifactCell(evt.target.parentElement)) {
+    draggableArtifactEl = evt.target;
+    document.addEventListener('drop', onDocumentDrop);
+    document.addEventListener('dragover', onDocumentDragover);
+  }
+};
+
+document.addEventListener('dragstart', onDocumentDragStart);
